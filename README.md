@@ -29,9 +29,10 @@ The hotel management is facing several business challenges and needs you to find
 | 6.   | Service_Usage     | Record the services that customers have used in the hotel     |
 
 ## 3. Exploratory Data Analysis (EDA)
-Explore the occupancy rate for each room type:
+Using CTEs to measure the Occupancy Rate for each Room Type:
 
-```WITH booking_count AS (
+```
+WITH booking_count AS (
 		SELECT  rooms.room_type, COUNT(*) AS booked_count
 		FROM dbo.bookings_senior bks
 		LEFT JOIN dbo.rooms_senior rooms
@@ -54,6 +55,8 @@ ORDER BY occupancy_rate ASC
 Occupancy Rate for each Room Type
 
 ![Image](https://github.com/kimphuongdo2710/analysis-of-hotel-booking-data/blob/main/asset/Screenshot%202025-09-25%20121348.png)
+
+- Standard Type has the lowest occupancy rate. 
 
 **Recommentions**
 ###  4.2 Dynamic Pricing Optimization
