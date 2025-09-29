@@ -18,6 +18,7 @@ The hotel management is facing several business challenges and needs you to find
 ## 2. Materials and Methods
 - Tool: **Microsoft SQL Server Management Studio**
 - Data Source: Provided by Dứa Data.
+- Use SQLAlchemy to connect with MySQL database.
 
 | No. | Table Name | Description |
 |----------|----------|----------|
@@ -29,7 +30,53 @@ The hotel management is facing several business challenges and needs you to find
 | 6.   | Service_Usage     | Record the services that customers have used in the hotel     |
 
 ## 3. Exploratory Data Analysis (EDA)
-Using CTEs to measure the Occupancy Rate for each Room Type:
+- Check Primary Keys and Foreign Keys from tables:
+
+```
+with connection.connect() as conn:
+    inspector = inspect(conn)
+    tables = inspector.get_table_names()
+    
+    for table in tables:
+        print("\n"f"Table: {table}")
+        fks = inspector.get_foreign_keys(table)
+        pk = inspector.get_pk_constraint(table)
+        print("Primary key(s):", pk['constrained_columns'])
+        if fks:
+            for fk in fks:
+                print(f"  Foreign Key: {fk['constrained_columns']} -> {fk['referred_table']}({fk['referred_columns']})")
+        else:
+                print("  No foreign keys")
+```
+
+- Check the relationships among tables and right below is an output:
+
+```
+relations = []
+
+with connection.connect() as conn:
+    inspector = inspect(conn)
+    tables = inspector.get_table_names()
+    
+    for table in tables:
+        fks = inspector.get_foreign_keys(table)
+        for fk in fks:
+            relations.append({
+                "table": table,
+                "column": fk['constrained_columns'],
+                "references_table": fk['referred_table'],
+                "references_column": fk['referred_columns']
+            })
+
+df_rel = pd.DataFrame(relations)
+print(df_rel)
+```
+
+<div align = "center">
+<img width="822" height="169" alt="image" src="https://github.com/user-attachments/assets/f2fcdf01-93e6-4df9-b05c-0e2c897a7123"/>
+</div>
+
+- Using CTEs to measure the Occupancy Rate for each Room Type:
 
 ```
 WITH booking_count AS (
