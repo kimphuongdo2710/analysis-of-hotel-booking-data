@@ -7,18 +7,18 @@ The hotel management is facing several business challenges and needs you to find
 
 🛠 Your tasks:
 
-✔️ Answer business questions using data
-
-✔️ Propose strategies to maximize hotel revenue
-
-✔️ Visualize data with BI tools or Python
-
-✔️ Present your findings as a dashboard or presentation
+- Answer business questions using data
+- Propose strategies to maximize hotel revenue
+- Visualize data with BI tools or Python
+- Present your findings as a dashboard or presentation
 
 ## 2. Materials and Methods
 - Tool: **Microsoft SQL Server Management Studio**
 - Data Source: Provided by Dứa Data.
 - Use SQLAlchemy to connect with MySQL database.
+- Time range: for bookings created from 12-02-2023 to 10-02-2025
+- Data Limitations:
+   1. In table rooms_senior, status "Available" and "Booked" are vague which not clear state which period of this status.
 
 | No. | Table Name | Description |
 |----------|----------|----------|
@@ -30,7 +30,8 @@ The hotel management is facing several business challenges and needs you to find
 | 6.   | Service_Usage     | Record the services that customers have used in the hotel     |
 
 ## 3. Exploratory Data Analysis (EDA)
-- Check Primary Keys and Foreign Keys from tables:
+### 3.1 Data Validation and Transformation
+- Create and double check Primary Keys and Foreign Keys from tables:
 
 ```
 with connection.connect() as conn:
@@ -76,6 +77,19 @@ print(df_rel)
 <img width="822" height="169" alt="image" src="https://github.com/user-attachments/assets/f2fcdf01-93e6-4df9-b05c-0e2c897a7123"/>
 </div>
 
+### 3.2 Anomaly Detection
+- Some cases need ***Flag For Review***:
+	- **1,468 bookings** have a ```created_at``` date that is after the ```payment_date```, of which **1,222 are unique bookings**, indicating that some guests made a payment before the booking was officially created.<br>
+→ This situation can occur if a returning guest has an unpaid balance from a previous stay, or due to system cut-off errors, or from data entry, timezone, or software issues.
+	- ***Refund Fraud***: In **507 cases**, payments were made after the bookings had already been canceled.<br>
+ → This could mean one of the following:
+		- The payment was for additional services (such as spa or gym) that may use the same booking_id. To confirm this, we need to check if the hotel uses the same booking_id for these extra services.
+  		- If the booking_id is not reused for other services, the payment might represent compensation for the canceled booking.
+      	- Otherwise, these cases may indicate an error in the hotel management system.<br>
+   	- ***Cancelation Fraud***: There are **1,702 cases** where guests checked into their rooms even though their bookings were marked as cancelled.
+   	- ***Double Bookings*** (same check_in date, same check_out date and same rooms): There are **6 cases** where the same room has been booked for overlapping periods.
+
+### 3.2 Data Exploration
 - Using CTEs to measure the Occupancy Rate for each Room Type:
 
 ```
