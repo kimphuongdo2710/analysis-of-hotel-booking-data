@@ -78,17 +78,13 @@ print(df_rel)
 </div>
 
 ### 3.2 Anomaly Detection
-- Some cases need ***Flag For Review***:
-	- **1,468 bookings** have a ```created_at``` date that is after the ```payment_date```, of which **1,222 are unique bookings**, indicating that some guests made a payment before the booking was officially created.<br>
-→ This situation can occur if a returning guest has an unpaid balance from a previous stay, or due to system cut-off errors, or from data entry, timezone, or software issues.
-	- ***Refund Fraud***: In **507 cases**, payments were made after the bookings had already been canceled.<br>
- → This could mean one of the following:
-		- The payment was for additional services (such as spa or gym) that may use the same booking_id. To confirm this, we need to check if the hotel uses the same booking_id for these extra services.
-  		- If the booking_id is not reused for other services, the payment might represent compensation for the canceled booking.
-      	- Otherwise, these cases may indicate an error in the hotel management system.<br>
-   	- ***Cancelation Fraud***: There are **1,702 cases** where guests checked into their rooms even though their bookings were marked as cancelled.
-   	- ***Double Bookings*** (same check_in date, same check_out date and same rooms): There are **6 cases** where the same room has been booked for overlapping periods.
-
+| Flag For Review                  | Action Plan                  |
+|-----------------------|---------------------------|
+| **1,468 bookings** have a ```created_at``` date that is after the ```payment_date```, of which **1,222 are unique bookings**, indicating that some guests made a payment before the booking was officially created.<br><br>→ ***Discussion:*** This situation can occur if a returning guest has an unpaid balance from a previous stay, or due to system cut-off errors, or from data entry, timezone, or software issues. |Double check with the operation staffs, but keep data as it is for now        |
+| ***Refund Fraud***: In **507 cases**, payments were made after the bookings had already been canceled.<br><br>→ ***Discussion:*** This could mean one of the following:<br>- The payment was for additional services (such as spa or gym) that may use the same booking_id.<br>To confirm this, we need to check if the hotel uses the same booking_id for these extra services.<br>- If the booking_id is not reused for other services, the payment might represent compensation for the canceled booking.<br>- Otherwise, these cases may indicate an error in the hotel management system. |Double check with the operation staffs, but keep data as it is for now        |
+| ***Cancelation Fraud***: There are **1,702 cases** where guests checked into their rooms even though their bookings were marked as cancelled. |Remove these cases out of the dataset      |
+| ***Double Bookings*** (same check_in date, same check_out date and same rooms): There are **6 cases** where the same room has been booked for overlapping periods. |Remove these cases out of the dataset      |
+   
 ### 3.2 Data Exploration
 - Using CTEs to measure the Occupancy Rate for each Room Type:
 
