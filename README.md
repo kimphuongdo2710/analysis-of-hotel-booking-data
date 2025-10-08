@@ -89,33 +89,40 @@ print(df_rel)
 - Using CTEs to measure the Occupancy Rate for each Room Type:
 
 ```
-WITH booking_count AS (
-		SELECT  rooms.room_type, COUNT(*) AS booked_count
-		FROM dbo.bookings_senior bks
-		LEFT JOIN dbo.rooms_senior rooms
-			ON bks.room_id = rooms.room_id
-		WHERE bks.status = 'Confirmed'
-		GROUP BY rooms.room_type), 
-
-	total_booking_count AS (
-		SELECT SUM(booked_count) AS total_booked
-		FROM booking_count)
-
-SELECT room_type, CAST(ROUND(booked_count*100.0/total_booked, 2) AS DECIMAL(10,1)) AS occupancy_rate
-FROM booking_count
-CROSS JOIN total_booking_count
-ORDER BY occupancy_rate ASC
+WITH daily_booked_by_room_type AS (
+    SELECT rm.room_type, ebd.curr_check_in,
+            COUNT(ebd.curr_check_in) AS booked_room_count
+	FROM expand_booking_by_date ebd
+    JOIN rooms_senior rm ON ebd.room_id = rm.room_id
+    GROUP BY rm.room_type, ebd.curr_check_in),
+    
+    total_available_rooms_by_room_type AS (
+    SELECT room_type,
+			COUNT(*) AS available_room_count_by_room_type
+	FROM rooms_senior
+    GROUP BY room_type
+    )
+    
+SELECT dbb.curr_check_in, dbb.room_type,
+		ROUND((dbb.booked_room_count*100 / avai.available_room_count_by_room_type),2) AS occupancy_rate
+FROM daily_booked_by_room_type dbb
+JOIN total_available_rooms_by_room_type avai
+	ON dbb.room_type = avai.room_type
+GROUP BY dbb.curr_check_in, dbb.room_type
 ```
 ## 4. Key Business Insights
 ###  4.1 Hotel Booking Performance
-**Findings**
-Occupancy Rate for each Room Type
+**Occupancy Rate for each Room Type**
 
 ![image](https://github.com/kimphuongdo2710/analysis-of-hotel-booking-data/blob/c6215de80855586a5568d21ae100501f1cf80baf/asset/Screenshot%202025-10-08%20201322.png)
 
+**Findings:**
 - While Deluxe and Standard rooms are more popular during the summer, Executive, Suite, and President rooms are preferred in the winter and spring. 
 
 **Recommentions**
+- Investigate the impact of temperature and room landscape views on increasing bookings for each room type.
+- Develop a marketing strategy for each room type based on their seasonal popularity.
+
 ###  4.2 Dynamic Pricing Optimization
 ###  4.3 Customer Segmentation & Churn Prediction
 ###  4.4 Anomaly Detection
