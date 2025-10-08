@@ -111,9 +111,10 @@ ORDER BY occupancy_rate ASC
 **Findings**
 Occupancy Rate for each Room Type
 
-![Image](https://github.com/kimphuongdo2710/analysis-of-hotel-booking-data/blob/main/asset/Screenshot%202025-09-25%20121348.png)
+![Image](<img width="1483" height="613" alt="image" src="https://github.com/user-attachments/assets/449dc307-3905-46e7-8a10-c97905dd10b6" />
+)
 
-- Standard Type has the lowest occupancy rate. 
+- While Deluxe and Standard rooms are more popular during the summer, Executive, Suite, and President rooms are preferred in the winter and spring. 
 
 **Recommentions**
 ###  4.2 Dynamic Pricing Optimization
