@@ -89,24 +89,25 @@ print(df_rel)
 | ***Cancelation Fraud***: There are **1,702 cases** where guests checked into their rooms even though their bookings were marked as cancelled. |Remove these cases out of the dataset      |
 | ***Double Bookings*** (same check_in date, same check_out date and same rooms): There are **6 cases** where the same room has been booked for overlapping periods. |I have decided to keep these as they are because the statuses are not the same. The reservation team may have intentionally created double bookings before guest confirmation in order to maximize revenue. However, one concern is why the status has not been updated even though the stay period is already over.      |
    
-### 3.2 Data Exploration
-- Using CTEs to measure the Occupancy Rate for each Room Type:
-
+### 3.3 Data Exploration
+<details>
+	<summary>Using CTEs to measure the Occupancy Rate for each Room Type:</summary>
+	
 ```
 WITH daily_booked_by_room_type AS (
-    SELECT rm.room_type, ebd.curr_check_in,
-            COUNT(ebd.curr_check_in) AS booked_room_count
+	SELECT rm.room_type, ebd.curr_check_in,
+			COUNT(ebd.curr_check_in) AS booked_room_count
 	FROM expand_booking_by_date ebd
-    JOIN rooms_senior rm ON ebd.room_id = rm.room_id
-    GROUP BY rm.room_type, ebd.curr_check_in),
-    
-    total_available_rooms_by_room_type AS (
-    SELECT room_type,
+	JOIN rooms_senior rm ON ebd.room_id = rm.room_id
+	GROUP BY rm.room_type, ebd.curr_check_in),
+	
+	total_available_rooms_by_room_type AS (
+	SELECT room_type,
 			COUNT(*) AS available_room_count_by_room_type
 	FROM rooms_senior
-    GROUP BY room_type
-    )
-    
+	GROUP BY room_type
+	)
+	
 SELECT dbb.curr_check_in, dbb.room_type,
 		ROUND((dbb.booked_room_count*100 / avai.available_room_count_by_room_type),2) AS occupancy_rate
 FROM daily_booked_by_room_type dbb
@@ -114,6 +115,8 @@ JOIN total_available_rooms_by_room_type avai
 	ON dbb.room_type = avai.room_type
 GROUP BY dbb.curr_check_in, dbb.room_type
 ```
+</details>
+
 ## 4. Key Business Insights
 ###  4.1 Hotel Booking Performance
 **Occupancy Rate for each Room Type**
