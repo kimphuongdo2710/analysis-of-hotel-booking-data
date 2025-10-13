@@ -31,7 +31,8 @@ The hotel management is facing several business challenges and needs you to find
 
 ## 3. Exploratory Data Analysis (EDA)
 ### 3.1 Data Validation and Transformation
-- Create and double check Primary Keys and Foreign Keys from tables:
+<details>
+	<summary>Create and double check Primary Keys and Foreign Keys from tables:</summary>
 
 ```
 with connection.connect() as conn:
@@ -49,8 +50,10 @@ with connection.connect() as conn:
         else:
                 print("  No foreign keys")
 ```
+</details>
 
-- Check the relationships among tables and right below is an output:
+<details>
+	<summary>Check the relationships among tables and right below is an output:</summary>
 
 ```
 relations = []
@@ -72,6 +75,7 @@ with connection.connect() as conn:
 df_rel = pd.DataFrame(relations)
 print(df_rel)
 ```
+</details>
 
 <div align = "center">
 <img width="822" height="169" alt="image" src="https://github.com/user-attachments/assets/f2fcdf01-93e6-4df9-b05c-0e2c897a7123"/>
