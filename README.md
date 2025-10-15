@@ -131,6 +131,7 @@ GROUP BY dbb.curr_check_in, dbb.room_type
 - Develop a marketing strategy for each room type based on their seasonal popularity.
 
 ###  4.2 Dynamic Pricing Optimization
+
 ###  4.3 Customer Segmentation & Churn Prediction
 <details>
 	<summary>Using CTEs, WINDOW FUNCTIONS and CASE WHEN to measure the RFM scores (Recency, Frequency, Monetary):</summary>
@@ -200,5 +201,3 @@ With **RFM Model**, segmenting customers and examining the distribution of custo
 <div align = "center">
 <img alt="image" src="https://github.com/kimphuongdo2710/analysis-of-hotel-booking-data/blob/main/asset/Screenshot%202025-10-15%20121044.png"/>
 </div>
-
-###  4.4 Anomaly Detection
