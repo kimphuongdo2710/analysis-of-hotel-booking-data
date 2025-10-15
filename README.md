@@ -201,3 +201,5 @@ With **RFM Model**, segmenting customers and examining the distribution of custo
 <div align = "center">
 <img alt="image" src="https://github.com/kimphuongdo2710/analysis-of-hotel-booking-data/blob/main/asset/Screenshot%202025-10-15%20121044.png"/>
 </div>
+
+(to be continued...)
