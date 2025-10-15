@@ -132,4 +132,71 @@ GROUP BY dbb.curr_check_in, dbb.room_type
 
 ###  4.2 Dynamic Pricing Optimization
 ###  4.3 Customer Segmentation & Churn Prediction
+<details>
+	<summary>Using CTEs, WINDOW FUNCTIONS and CASE WHEN to measure the RFM scores (Recency, Frequency, Monetary):</summary>
+
+```
+	query = '''WITH rfm AS (
+	SELECT	bk.customer_id, 
+		DATEDIFF("2025-02-11",MAX(pm.payment_date)) AS Recency,
+        COUNT(pm.payment_date) AS Frequency,
+        SUM(amount) AS Monetary
+	FROM hotel_revenue_10mar25.bookings_senior bk
+	LEFT JOIN payments_senior pm ON bk.booking_id = pm.booking_id
+	GROUP BY bk.customer_id
+    ),
+rfm_score AS (SELECT customer_id, Recency, Frequency, Monetary,
+	NTILE(5) OVER (ORDER BY Recency) AS R,
+    NTILE(5) OVER (ORDER BY Frequency) AS F,
+    NTILE(5) OVER (ORDER BY Monetary) AS M
+FROM rfm),
+
+temp AS (SELECT R, F, M, CONCAT(R, F , M) AS RFM, COUNT(*) AS rfm_count
+FROM rfm_score
+GROUP BY R, F, M, CONCAT(R, F , M)),
+
+segment_count AS (SELECT 
+	CASE 
+			WHEN (R BETWEEN 4 AND 5) AND (F BETWEEN 4 AND 5) AND (M BETWEEN 4 AND 5) THEN 'Champions'
+            WHEN (R in (3,4,5)) AND (F in (3,4,5)) AND (M in (3,4,5)) THEN 'Loyal Customers'
+            WHEN (R in (3,4,5)) AND (F in (3,4,5)) AND (M in (1,2,3)) THEN 'Potential Loyalists'
+            WHEN (R in (3,4,5)) AND (F in (1,2)) AND (M in (1,2)) THEN 'Recent Customers'
+            WHEN (R in (3,4,5)) AND (F in (1,2)) AND (M in (1,2,3,4,5)) THEN 'Promising'
+            WHEN (R in (3,4,5)) AND (F in (2,3,4)) AND (M in (3,4,5)) THEN 'Customers Need Attention'
+            WHEN (R in (2,3)) AND (F in (1,2,3)) AND (M in (1,2,3)) THEN 'About To Sleep'
+            WHEN (R in (1,2)) AND (F in (2,3,4,5)) AND (M in (2,3,4,5)) THEN 'At Risk'
+            WHEN (R in (1,2)) AND (F in (1,2,3,4,5)) AND (M in (3,4,5)) THEN 'Can''t Lose Them'
+            WHEN (R in (1,2,3)) AND (F in (1,2,3,4,5)) AND (M in (1,2,3)) THEN 'Hibernating'
+            WHEN (R in (1)) AND (F in (1,2,3,4,5)) AND (M in (1,2)) THEN 'Lost'
+            ELSE 'Unclassified'
+		END AS rfm_segment,
+		COUNT(*) as count
+FROM temp 
+GROUP BY rfm_segment
+ORDER BY count DESC)
+
+SELECT rfm_segment, count, ROUND(count*100/SUM(count) OVER(),1) AS percent
+FROM segment_count
+GROUP BY rfm_segment
+
+UNION ALL
+
+SELECT 'Total', SUM(count), 100
+FROM segment_count
+;'''
+
+try:
+    with connection.connect() as conn:
+        df = pd.read_sql(query, conn)
+        print(df)
+
+except Exception as e:
+    print('Error:', e)
+```
+
+</details>
+
+With **RFM Model**, segmenting customers and examining the distribution of customers across the segments:
+![image](https://github.com/kimphuongdo2710/analysis-of-hotel-booking-data/blob/main/asset/Screenshot%202025-10-15%20121044.png)
+
 ###  4.4 Anomaly Detection
