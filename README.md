@@ -197,6 +197,8 @@ except Exception as e:
 </details>
 
 With **RFM Model**, segmenting customers and examining the distribution of customers across the segments:
-![image](https://github.com/kimphuongdo2710/analysis-of-hotel-booking-data/blob/main/asset/Screenshot%202025-10-15%20121044.png)
+<div align = "center">
+<img alt="image" src="https://github.com/kimphuongdo2710/analysis-of-hotel-booking-data/blob/main/asset/Screenshot%202025-10-15%20121044.png"/>
+</div>
 
 ###  4.4 Anomaly Detection
