@@ -89,7 +89,9 @@ print(df_rel)
 | ***Cancelation Fraud***: There are **1,702 cases** where guests checked into their rooms even though their bookings were marked as cancelled. |Remove these cases out of the dataset      |
 | ***Double Bookings*** (same check_in date, same check_out date and same rooms): There are **6 cases** where the same room has been booked for overlapping periods. |I have decided to keep these as they are because the statuses are not the same. The reservation team may have intentionally created double bookings before guest confirmation in order to maximize revenue. However, one concern is why the status has not been updated even though the stay period is already over.      |
    
-### 3.3 Data Exploration
+### 3.3 Data Exploration and Analysis
+*Here, I demonstrate the technical methodologies and tools applied throughout this report. If you are primarily interested in the final results, please refer to Section 4 below.*
+
 <details>
 	<summary>Using CTEs to measure the Occupancy Rate for each Room Type:</summary>
 	
@@ -117,22 +119,6 @@ GROUP BY dbb.curr_check_in, dbb.room_type
 ```
 </details>
 
-## 4. Key Business Insights
-###  4.1 Hotel Booking Performance
-**Occupancy Rate for each Room Type**
-
-![image](https://github.com/kimphuongdo2710/analysis-of-hotel-booking-data/blob/c6215de80855586a5568d21ae100501f1cf80baf/asset/Screenshot%202025-10-08%20201322.png)
-
-**Findings:**
-- While Deluxe and Standard rooms are more popular during the summer, Executive, Suite, and President rooms are preferred in the winter and spring. 
-
-**Recommentions**
-- Investigate the impact of temperature and room landscape views on increasing bookings for each room type.
-- Develop a marketing strategy for each room type based on their seasonal popularity.
-
-###  4.2 Dynamic Pricing Optimization
-
-###  4.3 Customer Segmentation & Churn Prediction
 <details>
 	<summary>Using CTEs, WINDOW FUNCTIONS and CASE WHEN to measure the RFM scores (Recency, Frequency, Monetary):</summary>
 
@@ -196,6 +182,24 @@ except Exception as e:
 ```
 
 </details>
+
+
+## 4. Key Business Insights
+###  4.1 Hotel Booking Performance
+**Occupancy Rate for each Room Type**
+
+![image](https://github.com/kimphuongdo2710/analysis-of-hotel-booking-data/blob/c6215de80855586a5568d21ae100501f1cf80baf/asset/Screenshot%202025-10-08%20201322.png)
+
+**Findings:**
+- While Deluxe and Standard rooms are more popular during the summer, Executive, Suite, and President rooms are preferred in the winter and spring. 
+
+**Recommentions**
+- Investigate the impact of temperature and room landscape views on increasing bookings for each room type.
+- Develop a marketing strategy for each room type based on their seasonal popularity.
+
+###  4.2 Dynamic Pricing Optimization
+
+###  4.3 Customer Segmentation & Churn Prediction
 
 With **RFM Model**, segmenting customers and examining the distribution of customers across the segments:
 <div align = "center">
